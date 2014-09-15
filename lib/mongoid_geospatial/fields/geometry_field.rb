@@ -37,13 +37,20 @@ module Mongoid
 
       alias_method :to_coordinates, :to_a
 
+      def mongoize
+        {
+          'type' => mongodb_geotype,
+          'coordinates' => to_coordinates
+        }
+      end
+
       class << self
 
         # Database -> Object
         def demongoize(o)
           case o
-          when Array
-            new(o)
+          when GeometryField then o
+          when Array then new(o)
           when Hash
             if o.has_key?('coordinates')
               new(o['coordinates'][0])
@@ -57,10 +64,7 @@ module Mongoid
 
         # Object -> Database
         def mongoize(o)
-          {
-            'type' => o.mongodb_geotype,
-            'coordinates' => o.to_coordinates
-          }
+          self.demongoize(o).mongoize
         end
 
         private
