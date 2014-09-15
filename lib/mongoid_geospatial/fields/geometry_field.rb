@@ -31,13 +31,46 @@ module Mongoid
         radius r.to_f / Mongoid::Geospatial.earth_radius[unit]
       end
 
+      def mongodb_geotype
+        self.class.name.split('::').last
+      end
+
+      alias_method :to_coordinates, :to_a
+
       class << self
 
         # Database -> Object
         def demongoize(o)
-          new(o)
+          case o
+          when Array
+            new(o)
+          when Hash
+            if o.has_key?('coordinates')
+              new(o['coordinates'][0])
+            else
+              field_error!
+            end
+          else
+            field_error!
+          end
         end
 
+        # Object -> Database
+        def mongoize(o)
+          {
+            'type' => o.mongodb_geotype,
+            'coordinates' => o.to_coordinates
+          }
+        end
+
+        private
+
+        def field_error!
+          raise ArgumentError, <<-MSG.strip
+            Geometry field should be an array or hash in the following form:
+            e.g. {"type": "Polygon", "coordinates": [[[1,2], ....]]}
+          MSG
+        end
       end
     end
   end
