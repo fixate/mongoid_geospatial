@@ -483,6 +483,10 @@ to
 
 Beware the 't' and 'c' issue. It's spaTial.
 
+Fixate fork
+-----------
+
+* (de)mongize changed to support correct mongodb geotypes e.g polygons demongize to { type: "Polygon", coordinates: [[[1,2]...]] }
 
 
 Troubleshooting
