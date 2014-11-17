@@ -2,19 +2,17 @@ module Mongoid
   module Geospatial
     # Point
     #
-    class Point
-      include Enumerable
+    class Point < GeometryField
       attr_reader :x, :y
 
-      def initialize(x = nil, y = nil)
-        return unless x && y
-        @x, @y = x, y
+      def initialize(x = 0, y = 0)
+        @x = x
+        @y = y
       end
 
       # Object -> Database
       # Let's store NilClass if we are invalid.
       def mongoize
-        return nil unless x && y
         [x, y]
       end
       alias_method :to_a,  :mongoize
@@ -22,11 +20,6 @@ module Mongoid
 
       def [](args)
         mongoize[args]
-      end
-
-      def each
-        yield x
-        yield y
       end
 
       def to_s
