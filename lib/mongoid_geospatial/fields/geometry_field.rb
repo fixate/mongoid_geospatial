@@ -1,7 +1,5 @@
 module Mongoid
   module Geospatial
-    # Main Geometry Array
-    # Holds Lines/Polygons....
     class GeometryField < Array
 
       def bounding_box
