@@ -42,6 +42,9 @@ module Mongoid
         }
       end
 
+      alias_method :type, :mongodb_geotype
+      alias_method :coordinates, :to_coordinates
+
       class << self
 
         # Database -> Object
