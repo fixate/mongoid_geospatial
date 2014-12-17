@@ -51,7 +51,7 @@ module Mongoid
           when Array then new(o)
           when Hash
             if o.has_key?('coordinates')
-              new(o['coordinates'][0])
+              new(o['coordinates'])
             else
               field_error!
             end
